@@ -21,18 +21,13 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany
-    @JoinTable(
-        name = "user_orders",
-        joinColumns = @JoinColumn(name = "order_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<User> users = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private User customer;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "order_id")
     private Set<OrderItem> items = new HashSet<>();
-
 
     @OneToOne
     @JoinColumn(name = "payment_id")

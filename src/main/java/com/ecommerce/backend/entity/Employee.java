@@ -6,18 +6,16 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.*;
 
+import static com.ecommerce.backend.utils.Constants.ROLE_ADMIN;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@DiscriminatorValue("EMPLOYEE")
+@DiscriminatorValue(ROLE_ADMIN)
 public class Employee extends User{
 
-    @Column(nullable = false)
-    private Integer commissionRate;
-
-    private Role role;
-
+    private Integer commissionRate = 0;
 
 }

@@ -11,21 +11,14 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    //save a user
-    User save(User user);
-
-    //find a user by id
-    Optional<User> findById(Long id);
-
-    // finds all users
-    List<User> findAll();
-
-    //delete a user by id
-    void deleteById(Long id);
-
-    //update a user
-    User saveAndFlush(User user);
-
+    // Find user by email for authentication
+    Optional<User> findByEmail(String email);
+    
+    // Check if email exists
+    boolean existsByEmail(String email);
+    
+    // Find active users only
+    List<User> findByActiveTrue();
 
     @Query("SELECT u FROM User u WHERE SIZE(u.orders) > :minOrders ORDER BY SIZE(u.orders) DESC")
     List<User> findUsersWithMostOrders(@Param("minOrders") int minOrders);

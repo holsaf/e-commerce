@@ -25,9 +25,9 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("Virtual Shop API")
                         .version("1.0")
-                        .description("API REST para tienda virtual con autenticación JWT")
+                        .description("API REST with JWT")
                         .contact(new Contact()
-                                .name("Equipo de desarrollo")
+                                .name("Dev Team")
                                 .email("contacto@virtualshop.com")));
     }
 }
