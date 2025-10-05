@@ -40,23 +40,26 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/admin/**").hasRole(ROLE_ADMIN)
+
+                        .requestMatchers("/api/auth/register", "/api/auth/login", "/api/auth/admin/register").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
 
                         .requestMatchers("/api/users/profile").authenticated()
 
+
+                        .requestMatchers("/api/auth/admin/**").hasRole(ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/api/products").hasRole(ROLE_ADMIN)
                         .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole(ROLE_ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole(ROLE_ADMIN)
                         .requestMatchers(HttpMethod.GET, "/api/users").hasRole(ROLE_ADMIN)
                         .requestMatchers(HttpMethod.GET, "/api/users/{id}").hasRole(ROLE_ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole(ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET,"/api/orders/admin/**").hasRole(ROLE_ADMIN)
+
+                        .requestMatchers("/api/orders/**").authenticated()
 
                         .requestMatchers(HttpMethod.GET, "/api/products/**").authenticated()
-                        .requestMatchers("/api/orders/**").authenticated()                        
-                        
-
-                        .requestMatchers("/api/auth/register","/api/auth/login").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                         .anyRequest().authenticated()
                 ).addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)

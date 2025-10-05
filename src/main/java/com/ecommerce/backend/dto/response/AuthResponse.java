@@ -1,4 +1,4 @@
-package com.ecommerce.backend.dto;
+package com.ecommerce.backend.dto.response;
 
 import com.ecommerce.backend.model.enums.Role;
 import lombok.AllArgsConstructor;
@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class AuthResponse {
     private String email;
     private Role role;
-    private String token; // For future JWT implementation
+    private String token;
 }

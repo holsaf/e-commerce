@@ -1,7 +1,9 @@
 package com.ecommerce.backend.service;
 
-import com.ecommerce.backend.dto.ProductDto;
+import com.ecommerce.backend.dto.request.ProductRequest;
+import com.ecommerce.backend.dto.response.ProductResponse;
 import com.ecommerce.backend.entity.Product;
+import com.ecommerce.backend.exception.ResourceNotFoundException;
 import com.ecommerce.backend.model.enums.ProductCategory;
 import com.ecommerce.backend.model.mapper.ProductMapper;
 import com.ecommerce.backend.repository.ProductRepository;
@@ -24,50 +26,50 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDto> getAllProducts(Pageable pageable) {
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable).map(productMapper::productToProductDto);
     }
 
     @Transactional(readOnly = true)
-    public ProductDto getProductById(Long id) {
+    public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
         return productMapper.productToProductDto(product);
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDto> searchProducts(String name, ProductCategory category,
-                                           BigDecimal minPrice, BigDecimal maxPrice,
-                                           Pageable pageable) {
+    public Page<ProductResponse> searchProducts(String name, ProductCategory category,
+                                                BigDecimal minPrice, BigDecimal maxPrice,
+                                                Pageable pageable) {
         return productRepository.searchProductsByFilters(name, category, minPrice, maxPrice, pageable)
                 .map(productMapper::productToProductDto);
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDto> getBestSellingProducts(Pageable pageable) {
+    public Page<ProductResponse> getBestSellingProducts(Pageable pageable) {
         return productRepository.findBestSellingProducts(pageable)
                 .map(productMapper::productToProductDto);
     }
 
     @Transactional
-    public String createProduct(ProductDto request) {
-        Product product = productMapper.productDToProduct(request);
+    public String createProduct(ProductRequest request) {
+        Product product = productMapper.productRequestToProduct(request);
         Product newProduct = productRepository.save(product);
         return newProduct.getId().toString();
     }
 
     @Transactional
-    public void updateProduct(Long id, ProductDto request) {
+    public void updateProduct(Long id, ProductRequest request) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-        //productMapper.updateProductFromDto(request, product);
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        productMapper.updateProductFromRequest(request, product);
         productRepository.saveAndFlush(product);
     }
 
     @Transactional
     public void deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
-            throw new RuntimeException("Product not found");
+            throw new ResourceNotFoundException("Product not found");
         }
         productRepository.deleteById(id);
     }

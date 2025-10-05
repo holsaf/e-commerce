@@ -8,10 +8,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    Page<Order> findByCustomerEmail(String email, Pageable pageable);
 
+    @Query("SELECT o FROM Order o WHERE o.customer.email = :email " +
+           "AND (:status IS NULL OR o.status = :status) ")
+    Page<Order> findByCustomerEmailWithOptionalStatus(
+            @Param("email") String email,
+            @Param("status") OrderStatus status,
+            Pageable pageable
+    );
 }

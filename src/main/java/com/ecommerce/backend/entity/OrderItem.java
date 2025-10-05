@@ -24,11 +24,14 @@ public class OrderItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
 
     @PrePersist
     @PreUpdate
     protected void calculateSubtotal() {
+        if (product != null && quantity != null) {
+            this.subtotal = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+        }
     }
 }

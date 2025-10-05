@@ -11,14 +11,9 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    // Find user by email for authentication
     Optional<User> findByEmail(String email);
-    
-    // Check if email exists
+
     boolean existsByEmail(String email);
-    
-    // Find active users only
-    List<User> findByActiveTrue();
 
     @Query("SELECT u FROM User u WHERE SIZE(u.orders) > :minOrders ORDER BY SIZE(u.orders) DESC")
     List<User> findUsersWithMostOrders(@Param("minOrders") int minOrders);

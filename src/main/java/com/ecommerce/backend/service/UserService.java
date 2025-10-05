@@ -1,14 +1,24 @@
 package com.ecommerce.backend.service;
 
-import com.ecommerce.backend.dto.UserResponse;
+import com.ecommerce.backend.dto.request.UserRequest;
+import com.ecommerce.backend.dto.request.UserUpdateRequest;
+import com.ecommerce.backend.dto.response.OrderResponse;
+import com.ecommerce.backend.dto.response.UserResponse;
+import com.ecommerce.backend.entity.Customer;
 import com.ecommerce.backend.entity.User;
+import com.ecommerce.backend.exception.NotAuthorizedException;
+import com.ecommerce.backend.exception.ResourceNotFoundException;
+import com.ecommerce.backend.model.enums.OrderStatus;
+import com.ecommerce.backend.model.enums.Role;
+import com.ecommerce.backend.model.mapper.UserMapper;
 import com.ecommerce.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -16,69 +26,53 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final OrderService orderService;
+    private final UserMapper userMapper;
 
     public Page<UserResponse> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable)
-                .map(this::mapToUserResponse);
+                .map(userMapper::userToUserResponse);
     }
 
     public UserResponse getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-        return mapToUserResponse(user);
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        return userMapper.userToUserResponse(user);
     }
 
     public UserResponse getUserProfile(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-        return mapToUserResponse(user);
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
+        return userMapper.userToUserResponse(user);
     }
+
+    public Page<OrderResponse> getOrdersByUserMailAndStatus(String userEmail, OrderStatus status, Pageable pageable) {
+        return orderService.getOrdersByUserMailAndStatus(userEmail, status, pageable);
+    }
+
 
     @Transactional
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-        
-        // Soft delete - set active to false
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        if(user.getRole().equals(Role.ADMIN)){
+            throw new NotAuthorizedException("Cannot deactivate an admin user");
+        }
         user.setActive(false);
         userRepository.save(user);
     }
 
     @Transactional
-    public UserResponse updateUserProfile(String email, UserResponse updateRequest) {
+    public UserResponse updateUserProfile(String email, UserUpdateRequest updateRequest) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-        
-        // Update user fields
-        if (updateRequest.getFirstName() != null) {
-            user.setFirstName(updateRequest.getFirstName());
-        }
-        if (updateRequest.getLastName() != null) {
-            user.setLastName(updateRequest.getLastName());
-        }
-        if (updateRequest.getPhone() != null) {
-            user.setPhone(updateRequest.getPhone());
-        }
-        if (updateRequest.getAddress() != null) {
-            user.setAddress(updateRequest.getAddress());
-        }
-        
-        User updatedUser = userRepository.save(user);
-        return mapToUserResponse(updatedUser);
-    }
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
 
-    private UserResponse mapToUserResponse(User user) {
-        UserResponse response = new UserResponse();
-        response.setId(user.getId());
-        response.setEmail(user.getEmail());
-        response.setFirstName(user.getFirstName());
-        response.setLastName(user.getLastName());
-        response.setPhone(user.getPhone());
-        response.setAddress(user.getAddress());
-        response.setRole(user.getRole());
-        response.setActive(user.getActive());
-        response.setCreatedAt(user.getCreatedAt());
-        response.setUpdatedAt(user.getUpdatedAt());
-        return response;
+        user.setFirstName(updateRequest.getFirstName());
+        user.setLastName(updateRequest.getLastName());
+        user.setPhone(updateRequest.getPhone());
+        user.setAddress(updateRequest.getAddress());
+
+        User updatedUser = userRepository.save(user);
+        return userMapper.userToUserResponse(updatedUser);
     }
 }

@@ -1,6 +1,7 @@
 package com.ecommerce.backend.controller;
 
-import com.ecommerce.backend.dto.ProductDto;
+import com.ecommerce.backend.dto.request.ProductRequest;
+import com.ecommerce.backend.dto.response.ProductResponse;
 import com.ecommerce.backend.model.enums.ProductCategory;
 import com.ecommerce.backend.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,59 +34,51 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary = "Get all products with pagination")
-    @SecurityRequirement(name = "bearer-jwt")
-    public ResponseEntity<Page<ProductDto>> getAllProducts(Pageable pageable) {
+    public ResponseEntity<Page<ProductResponse>> getAllProducts(Pageable pageable) {
         return ResponseEntity.ok(productService.getAllProducts(pageable));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a product by ID")
-    @SecurityRequirement(name = "bearer-jwt")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @GetMapping("/search")
     @Operation(summary = "Find products by filters")
-    @SecurityRequirement(name = "bearer-jwt")
-    public ResponseEntity<Page<ProductDto>> searchProducts(
+    public ResponseEntity<Page<ProductResponse>> searchProducts(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @PageableDefault(sort = "price", direction = Sort.Direction.ASC) Pageable pageable) {
-        log.info("name: {}, category: {}, minPrice: {}, maxPrice: {}", name, category, minPrice, maxPrice);
         return ResponseEntity.ok(productService.searchProducts(name, category, minPrice, maxPrice, pageable));
     }
 
     @GetMapping("/best-sellers")
     @Operation(summary = "Get best-selling products")
-    @SecurityRequirement(name = "bearer-jwt")
-    public ResponseEntity<Page<ProductDto>> getBestSellingProducts(Pageable pageable) {
+    public ResponseEntity<Page<ProductResponse>> getBestSellingProducts(Pageable pageable) {
         return ResponseEntity.ok(productService.getBestSellingProducts(pageable));
     }
 
     @PostMapping
     @Operation(summary = "Create a product (Admin)")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> createProduct(@Valid @RequestBody ProductDto request) {
+    public ResponseEntity<String> createProduct(@Valid @RequestBody ProductRequest request) {
         String productId = productService.createProduct(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(productId);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a product (Admin)")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> updateProduct(
             @PathVariable Long id,
-            @Valid @RequestBody ProductDto request) {
+            @Valid @RequestBody ProductRequest request) {
         productService.updateProduct(id, request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delect a product (Admin)")
-    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Delete a product (Admin)")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

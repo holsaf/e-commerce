@@ -28,8 +28,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "(:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
             "(:category IS NULL OR p.category = :category) AND " +
             "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
-            "(:maxPrice IS NULL OR p.price <= :maxPrice)" +
-            "ORDER BY p.price ASC")
+            "(:maxPrice IS NULL OR p.price <= :maxPrice)")
     Page<Product> searchProductsByFilters(
             @Param("name") String name,
             @Param("category") ProductCategory category,

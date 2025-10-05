@@ -1,13 +1,12 @@
 package com.ecommerce.backend.service;
 
-import com.ecommerce.backend.dto.AuthRequest;
-import com.ecommerce.backend.dto.AuthResponse;
-import com.ecommerce.backend.dto.RegisterRequest;
-import com.ecommerce.backend.dto.UserResponse;
+import com.ecommerce.backend.dto.request.AuthRequest;
+import com.ecommerce.backend.dto.response.AuthResponse;
+import com.ecommerce.backend.dto.request.UserRequest;
+import com.ecommerce.backend.dto.response.UserResponse;
 import com.ecommerce.backend.entity.Customer;
-import com.ecommerce.backend.entity.Employee;
+import com.ecommerce.backend.entity.Admin;
 import com.ecommerce.backend.entity.User;
-import com.ecommerce.backend.model.enums.Role;
 import com.ecommerce.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +28,9 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public UserResponse register(RegisterRequest request) {
+    public UserResponse register(UserRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new IllegalArgumentException("Email already exists");
         }
 
         Customer user = new Customer();
@@ -45,12 +46,12 @@ public class AuthService {
         return mapToUserResponse(savedUser);
     }
 
-    public UserResponse registerAdmin(RegisterRequest request) {
+    public UserResponse registerAdmin(UserRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new IllegalArgumentException("Email already exists");
         }
 
-        Employee user = new Employee();
+        Admin user = new Admin();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFirstName(request.getFirstName());
@@ -58,6 +59,7 @@ public class AuthService {
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());
         user.setActive(true);
+        user.setEmployeeId(UUID.randomUUID().toString());
 
         User savedUser = userRepository.save(user);
         return mapToUserResponse(savedUser);
@@ -77,7 +79,7 @@ public class AuthService {
         AuthResponse response = new AuthResponse();
         response.setEmail(user.getEmail());
         response.setRole(user.getRole());
-        response.setToken(token); // Uncomment when JWT is implemented
+        response.setToken(token);
         
         return response;
     }
