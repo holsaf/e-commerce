@@ -1,6 +1,0 @@
-
-
-
-jwt:
-  secret: "u8JvQk1pQk9zQk1vQk5vQk9zQk1vQk5vQk9zQk1vQk5vQk9zQk1vQk5vQk9zQk1v"
-  expiration: 3600000 # 1 hour in milliseconds (3600 seconds * 1000)

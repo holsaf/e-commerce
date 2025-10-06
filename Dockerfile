@@ -1,5 +1,4 @@
-# Multi-stage Dockerfile for Spring Boot Application
-# Optimized for AWS Fargate deployment
+
 
 # Stage 1: Build the application
 FROM gradle:8.5-jdk17-alpine AS builder
