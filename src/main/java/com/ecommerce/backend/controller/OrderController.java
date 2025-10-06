@@ -5,6 +5,7 @@ import com.ecommerce.backend.dto.response.OrderResponse;
 import com.ecommerce.backend.model.enums.OrderStatus;
 import com.ecommerce.backend.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Orders", description = "Order management endpoints")
 public class OrderController {
 

@@ -5,6 +5,7 @@ import com.ecommerce.backend.dto.response.ProductResponse;
 import com.ecommerce.backend.model.enums.ProductCategory;
 import com.ecommerce.backend.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +36,14 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Get a product by ID")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @GetMapping("/search")
+    @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Find products by filters")
     public ResponseEntity<Page<ProductResponse>> searchProducts(
             @RequestParam(required = false) String name,
@@ -52,12 +55,14 @@ public class ProductController {
     }
 
     @GetMapping("/best-sellers")
+    @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Get best-selling products")
     public ResponseEntity<Page<ProductResponse>> getBestSellingProducts(Pageable pageable) {
         return ResponseEntity.ok(productService.getBestSellingProducts(pageable));
     }
 
     @PostMapping
+    @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Create a product (Admin)")
     public ResponseEntity<String> createProduct(@Valid @RequestBody ProductRequest request) {
         String productId = productService.createProduct(request);
@@ -65,6 +70,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Update a product (Admin)")
     public ResponseEntity<Void> updateProduct(
             @PathVariable Long id,
@@ -74,6 +80,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Delete a product (Admin)")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);

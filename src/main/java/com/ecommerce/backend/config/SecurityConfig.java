@@ -44,7 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/register", "/api/auth/login", "/api/auth/admin/register").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll() // Allow public access to product listings
+                        .requestMatchers(HttpMethod.GET, "/api/products").permitAll() // Allow public access to product listings
 
 
                         .requestMatchers("/api/users/profile").authenticated()

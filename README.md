@@ -59,32 +59,34 @@ A modern, secure e-commerce backend built with Spring Boot, featuring JWT authen
 |--------|----------|-------------|---------|
 | `POST` | `/api/auth/register` | Register new customer | Public |
 | `POST` | `/api/auth/login` | User login | Public |
-| `POST` | `/api/auth/admin/register` | Register admin user | Public |
+| `POST` | `/api/auth/admin/register` | Register admin user | Public | (Only for Dev)
 
 #### 👥 Users
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|---------|
-| `GET` | `/api/users` | List all users | Admin |
-| `GET` | `/api/users/{id}` | Get user by ID | Admin |
-| `GET` | `/api/users/profile` | Get current user profile | Authenticated |
-| `PUT` | `/api/users/profile` | Update user profile | Authenticated |
+| `GET` | `/api/users` | List all users | 🔒 Admin |
+| `GET` | `/api/users/{id}` | Get user by ID | 🔒 Admin |
+| `GET` | `/api/users/profile` | Get current user profile | 🔒 Authenticated |
+| `PUT` | `/api/users/profile` | Update user profile | 🔒 Authenticated |
 
 #### 🛍️ Products
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|---------|
-| `GET` | `/api/products` | List products (with pagination/search) | Public |
-| `GET` | `/api/products/{id}` | Get product details | Public |
-| `POST` | `/api/products` | Create new product | Admin |
-| `PUT` | `/api/products/{id}` | Update product | Admin |
-| `DELETE` | `/api/products/{id}` | Delete product | Admin |
+| `GET` | `/api/products` | List products (with pagination) | Public |
+| `GET` | `/api/products/{id}` | Get product details | 🔒 Authenticated |
+| `GET` | `/api/products/search` | Search products by filters | 🔒 Authenticated |
+| `GET` | `/api/products/best-sellers` | Get best-selling products | 🔒 Authenticated |
+| `POST` | `/api/products` | Create new product | 🔒 Admin |
+| `PUT` | `/api/products/{id}` | Update product | 🔒 Admin |
+| `DELETE` | `/api/products/{id}` | Delete product | 🔒 Admin |
 
 #### 📦 Orders
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|---------|
-| `POST` | `/api/orders` | Create new order | Authenticated |
-| `GET` | `/api/orders` | Get user's orders | Authenticated |
-| `GET` | `/api/orders/{id}` | Get order details | Authenticated |
-| `GET` | `/api/orders/admin/all` | Get all orders | Admin |
+| `POST` | `/api/orders` | Create new order | 🔒 Authenticated |
+| `GET` | `/api/orders` | Get user's orders | 🔒 Authenticated |
+| `GET` | `/api/orders/{id}` | Get order details | 🔒 Authenticated |
+| `GET` | `/api/orders/admin/all` | Get all orders | 🔒 Admin |
 
 ### 🔑 Authentication
 

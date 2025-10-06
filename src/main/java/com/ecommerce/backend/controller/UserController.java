@@ -4,6 +4,7 @@ import com.ecommerce.backend.dto.request.UserUpdateRequest;
 import com.ecommerce.backend.dto.response.UserResponse;
 import com.ecommerce.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Users", description = "User management endpoints")
 public class UserController {
 
