@@ -13,7 +13,7 @@ A modern, secure e-commerce backend built with Spring Boot, featuring JWT authen
 
 1. **Clone and navigate to the project:**
    ```bash
-   git clone https://github.com/holsaf/virualShop.git
+   git clone https://github.com/holsaf/e-commerce.git
    cd backend
    ```
 
