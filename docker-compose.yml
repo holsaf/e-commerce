@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # Spring Boot Application - DEV Environment
+  # Runs in Docker container, connects to MySQL on host machine
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: virtual-shop-dev
+    environment:
+      # Use DEV profile
+      SPRING_PROFILES_ACTIVE: dev
+      
+      # Server configuration
+      SERVER_PORT: 8080
+      
+      # Optional: Override JWT secret for dev
+      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-key-for-local-testing}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
+    ports:
+      - "8080:8080"
+    networks:
+      - virtual-shop-network
+    # Use host network mode on Linux to access host MySQL
+    # Or configure extra_hosts for Docker Desktop
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  virtual-shop-network:
+    driver: bridge

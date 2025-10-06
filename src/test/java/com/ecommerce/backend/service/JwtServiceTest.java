@@ -1,33 +1,8 @@
 package com.ecommerce.backend.service;
 
 import io.jsonwebtoken.Claims;
-import io.j    @Test
-    @DisplayName("Should validate token successfully for correct user")
-    void testValidateToken_Success() {
-        // Arrange
-        String token = jwtService.generateToken(userDetails);
-
-        // Act
-        boolean isValid = jwtService.validateToken(token, userDetails);
-
-        // Assert
-        assertTrue(isValid);
-    }e    @Test
-    @DisplayName("Should fail validation for different user")
-    void testValidateToken_DifferentUser() {
-        // Arrange
-        String token = jwtService.generateToken(userDetails);
-        
-        List<GrantedAuthority> otherAuthorities = new ArrayList<>();
-        otherAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        UserDetails differentUser = new User("other@example.com", "password", otherAuthorities);
-
-        // Act
-        boolean isValid = jwtService.validateToken(token, differentUser);
-
-        // Assert
-        assertFalse(isValid);
-    }rt io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

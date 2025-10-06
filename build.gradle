@@ -1,7 +1,10 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.6'
+	id 'scala'
+	id 'org.springframework.boot' version '3.3.5'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
+	id 'io.gatling.gradle' version '3.11.5.2'
 }
 
 group = 'com.ecommerce'
@@ -20,15 +23,18 @@ repositories {
 }
 
 dependencies {
+    // Scala for Gatling
+    implementation 'org.scala-lang:scala-library:2.13.12'
+    
     // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-
-    // Swagger/OpenAPI
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    // Swagger/OpenAPI - Compatible with Spring Boot 3.3.x
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
     // Database
     runtimeOnly 'com.h2database:h2'
@@ -59,4 +65,64 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport
 }
+
+jacoco {
+	toolVersion = "0.8.10"
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		html.required = true
+		csv.required = false
+	}
+	
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+				'**/VirtualShopApplication.class',
+				'**/config/**',
+				'**/entity/**',
+				'**/dto/**',
+				'**/repository/**',
+				'**/exception/**',
+				'**/utils/**',
+				'**/model/enums/**',
+				'**/model/mapper/**Impl.class'
+			])
+		}))
+	}
+}
+
+jacocoTestCoverageVerification {
+	dependsOn jacocoTestReport
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.85
+			}
+		}
+	}
+	
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+				'**/VirtualShopApplication.class',
+				'**/config/**',
+				'**/entity/**',
+				'**/dto/**',
+				'**/repository/**',
+				'**/exception/**',
+				'**/utils/**',
+				'**/model/enums/**',
+				'**/model/mapper/**Impl.class'
+			])
+		}))
+	}
+}
+
+check.dependsOn jacocoTestCoverageVerification
+

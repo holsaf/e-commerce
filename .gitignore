@@ -45,3 +45,8 @@ build/gatling-results/
 ### Docker ###
 *.tar
 docker-compose.override.yml
+
+### Environment Variables ###
+.env
+.env.local
+.env.*.local
