@@ -14,10 +14,6 @@ services:
       
       # Server configuration
       SERVER_PORT: 8080
-      
-      # Optional: Override JWT secret for dev
-      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-key-for-local-testing}
-      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
     ports:
       - "8080:8080"
     networks:
