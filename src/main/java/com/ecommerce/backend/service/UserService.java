@@ -1,14 +1,10 @@
 package com.ecommerce.backend.service;
 
-import com.ecommerce.backend.dto.request.UserRequest;
 import com.ecommerce.backend.dto.request.UserUpdateRequest;
-import com.ecommerce.backend.dto.response.OrderResponse;
 import com.ecommerce.backend.dto.response.UserResponse;
-import com.ecommerce.backend.entity.Customer;
 import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.exception.NotAuthorizedException;
 import com.ecommerce.backend.exception.ResourceNotFoundException;
-import com.ecommerce.backend.model.enums.OrderStatus;
 import com.ecommerce.backend.model.enums.Role;
 import com.ecommerce.backend.model.mapper.UserMapper;
 import com.ecommerce.backend.repository.UserRepository;
@@ -46,16 +42,13 @@ public class UserService {
         return userMapper.userToUserResponse(user);
     }
 
-    public Page<OrderResponse> getOrdersByUserMailAndStatus(String userEmail, OrderStatus status, Pageable pageable) {
-        return orderService.getOrdersByUserMailAndStatus(userEmail, status, pageable);
-    }
-
 
     @Transactional
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        if(user.getRole().equals(Role.ADMIN)){
+
+        if(user.getRole() != null && user.getRole().equals(Role.ADMIN)){
             throw new NotAuthorizedException("Cannot deactivate an admin user");
         }
         user.setActive(false);

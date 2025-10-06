@@ -35,3 +35,13 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Gatling Performance Testing ###
+build/reports/gatling/
+build/gatling-results/
+.gatling/
+*.log
+
+### Docker ###
+*.tar
+docker-compose.override.yml

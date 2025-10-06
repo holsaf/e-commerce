@@ -1,25 +1,18 @@
 package com.ecommerce.backend.controller;
 
-import com.ecommerce.backend.dto.request.UserRequest;
 import com.ecommerce.backend.dto.request.UserUpdateRequest;
-import com.ecommerce.backend.dto.response.OrderResponse;
 import com.ecommerce.backend.dto.response.UserResponse;
-import com.ecommerce.backend.model.enums.OrderStatus;
-import com.ecommerce.backend.service.OrderService;
 import com.ecommerce.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor

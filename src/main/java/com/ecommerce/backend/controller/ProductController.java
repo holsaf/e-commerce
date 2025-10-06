@@ -5,10 +5,10 @@ import com.ecommerce.backend.dto.response.ProductResponse;
 import com.ecommerce.backend.model.enums.ProductCategory;
 import com.ecommerce.backend.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,21 +16,17 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.math.BigDecimal;
 
-@Slf4j
+
 @RestController
 @RequestMapping("/api/products")
+@RequiredArgsConstructor
 @Tag(name = "Products", description = "Products management endpoints")
 public class ProductController {
 
     private final ProductService productService;
-
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @GetMapping
     @Operation(summary = "Get all products with pagination")

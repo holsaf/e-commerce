@@ -65,6 +65,7 @@ public class AuthService {
         return mapToUserResponse(savedUser);
     }
 
+    @Transactional(readOnly = true)
     public AuthResponse login(AuthRequest request) {
 
         Authentication authentication = authenticationManager.authenticate(

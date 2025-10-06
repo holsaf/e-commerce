@@ -9,20 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Optional;
+
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Product save(Product product);
-
-    Product findById(long id);
-
-    Page<Product> findAll(Pageable pageable);
-
-    void deleteById(long id);
-
-    Product saveAndFlush(Product product);
 
     @Query("SELECT p FROM Product p WHERE " +
             "(:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +

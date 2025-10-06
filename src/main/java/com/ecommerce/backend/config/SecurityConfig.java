@@ -43,6 +43,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/auth/register", "/api/auth/login", "/api/auth/admin/register").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll() // Allow public access to product listings
 
 
                         .requestMatchers("/api/users/profile").authenticated()
@@ -59,7 +60,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/orders/**").authenticated()
 
-                        .requestMatchers(HttpMethod.GET, "/api/products/**").authenticated()
+                        //.requestMatchers(HttpMethod.GET, "/api/products/**").authenticated() to load/test without login
 
                         .anyRequest().authenticated()
                 ).addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
